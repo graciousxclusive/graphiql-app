@@ -1,0 +1,930 @@
+enum ActorType {
+  admin
+  agent
+  customer
+}
+
+type Admin {
+  designation: String
+  role: String
+  active: Boolean
+  readOnly: Boolean
+  updatedAt: String
+}
+
+input AdminRequest {
+  designation: String!
+  role: Int!
+}
+
+type Agent {
+  id: String
+  userId: String
+  designation: String
+  commission: Float
+  settlementBankName: String
+  settlementBankAccountNumber: String
+  settlementBankAccountName: String
+  kind: String
+  active: Boolean
+  updatedAt: String
+  staffId: String
+  smsLimit: Int
+  updatedBy: String
+  partnerIds: [String]
+  extensionNumber: String
+  performance: AgentPerformance
+  collection: [CustomerCollection]
+}
+
+type AgentPerformance {
+  totalEarnings: Float!
+  totalCollections: Float!
+  totalUnpaidCommissions: Float!
+  totalUnpaidCommissionsFrom: String
+  totalUnpaidCommissionsTo: String
+}
+
+input AgentRequest {
+  kind: Int!
+  designation: String
+  commission: Float
+  settlementBankName: String
+  settlementBankAccountNumber: String
+  settlementBankAccountName: String
+  partnerIds: [String]
+  extensionNumber: String
+  smsLimit: Int
+}
+
+input AmountBetween {
+  from: Float
+  to: Float
+}
+
+type APICredential {
+  id: String
+  partnerID: String
+  accessKey: String
+  secret: String
+  isActive: Boolean
+  submittedBy: String
+  updatedBy: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+type AuthResponse {
+  token: String
+  refresh: String
+  user: User
+  accessTokenExpiry: String
+  refreshTokenExpiry: String
+}
+
+type CollectionPlan {
+  id: String
+  planDaily: Boolean
+  planWeekly: Boolean
+  planMonthly: Boolean
+  planYearly: Boolean
+  note: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Customer {
+  id: String
+  partnerId: String
+  agentId: String
+  userId: String
+  loanId: String
+  systemId: String
+  name: String
+  address: String
+  lga: String
+  city: String
+  state: String
+  accountNumber: String
+  bankName: String
+  telephone: String
+  userTelephone: String
+  bvnNumber: String
+  bvnTelephone: String
+  guarantorName: String
+  guarantorAddress: String
+  guarantorTelephone: String
+  guarantorRelationship: String
+  createdAt: String
+  updatedAt: String
+  assignedAt: String
+  weight: Int
+  risk: String
+  classification: String
+  dnd: Boolean
+  dndAt: String
+  tags: String
+  partner: Partner
+  agent: Agent
+  gender: String
+  email: String
+  notifyByEmail: Boolean
+  dob: String
+  registeredTelephoneNumber: String
+  otpPinId: String
+  lastLoggedIn: String
+  balanceRemaining: Float
+  plan: CollectionPlan
+  instalments: [CustomerInstalment]
+  reports: [CustomerReport]
+  collections: [CustomerCollection]
+  channel: String
+  alternateNumber: String
+  maritalStatus: String
+  stateOfOrigin: String
+  lgaOfOrigin: String
+  nextOfKinName: String
+  nextOfKinAddress: String
+  nextOfKinTelephone: String
+  employmentStatus: String
+  businessName: String
+  businessAddress: String
+  monthlyNetIncome: Float
+  annualNetIncome: Float
+  customerBankName: String
+  customerAccountName: String
+  customerAccountNumber: String
+  meansOfIdentification: Map
+  utilityBill: Map
+}
+
+type CustomerAuthResponse {
+  token: String
+  refresh: String
+  customer: Customer
+  accessTokenExpiry: String
+  refreshTokenExpiry: String
+}
+
+type CustomerAuthStatus {
+  hasSetPin: Boolean
+  customerExists: Boolean!
+  customerId: String
+  hasVerifiedPhoneNumber: Boolean
+}
+
+type CustomerCollection {
+  id: String
+  agentId: String
+  reportId: String
+  commission: Float
+  commissionAmount: Float
+  amount: Float
+  description: String
+  balanceBefore: Float
+  balanceAfter: Float
+  paidAfter: String
+  settled: Boolean
+  createdAt: String
+  agent: Agent
+  customer: Customer
+}
+
+input CustomerCollectionSearchRequest {
+  agentId: String
+  customerId: String
+  reportId: String
+  partnerId: String
+  settled: Boolean
+  date: DateBetween
+  amount: AmountBetween
+}
+
+type CustomerCollectionSearchResult {
+  items: [CustomerCollection]
+  pageInfo: PageInfo!
+}
+
+enum CustomerFileType {
+  meansOfId
+  utilityBill
+}
+
+type CustomerInstalment {
+  id: String
+  customerId: String
+  loanId: String
+  loanInstalmentId: String
+  totalAmountToRepay: Float
+  totalAmountAutoDebit: Float
+  selfPayment: Float
+  paidAfter: String
+  repaid: Boolean
+  createdAt: String
+  campaign: String
+  dueDate: String
+  disbursementDate: String
+  originalAmountToPay: Float
+  originalPrincipalToPay: Float
+  originalInterestToPay: Float
+  originalLateFees: Float
+  amountToPayIncludingFees: Float
+  customerDiscount: Float
+  numberOfInstalments: Int
+  daysLate: Int
+  enteredAt: String
+  updatedAt: String
+  deletedAt: String
+  completed: Boolean
+  amountCollected: Float
+  amountPreviouslyPaidByCustomer: Float
+}
+
+input CustomerNewCollectionRequest {
+  reportId: String!
+  amount: Float!
+}
+
+type CustomerPlan {
+  id: String
+  partnerId: String
+  customerId: String
+  agentId: String
+  loanId: String
+  frequency: String
+  paymentCount: Int
+  note: String
+  amount: Float
+  submittedBy: String
+  updatedBy: String
+  startDate: String
+  endDate: String
+  createdAt: String
+  updatedAt: String
+}
+
+input CustomerPlanRequest {
+  partnerId: String!
+  customerId: String!
+  agentId: String
+  loanId: String!
+  frequency: String!
+  note: String
+  amount: Float!
+  startDate: String!
+}
+
+type CustomerPtp {
+  id: String
+  partnerId: String
+  customerId: String
+  agentId: String
+  customerReportId: String
+  loanId: String
+  amount: Float
+  amountPaid: Float
+  ptpDate: String
+  frequency: FrequencyType
+  isMultiple: Boolean
+  actualPaymentDate: String
+  paymentStatus: PaymentStatusType
+  submittedBy: String
+  updatedBy: String
+  submitterKind: ActorType
+  updaterKind: ActorType
+  attachments: [Map]
+  description: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+input CustomerPTPRequest {
+  partnerId: String!
+  loanId: String!
+  amount: Float!
+  frequency: FrequencyType
+  ptpDate: String!
+  description: String
+  attachments: [Upload]
+}
+
+input CustomerPTPUpdateRequest {
+  ptpDate: String
+  description: String
+  actualPaymentDate: String
+  attachments: [Upload]
+}
+
+type CustomerReport {
+  id: String
+  agentId: String
+  staffId: String
+  type: ReportType
+  comment: String
+  hasPtp: Boolean
+  meta: Map
+  createdAt: String
+  updatedAt: String
+  customerPtps: [CustomerPtp]
+  submitterKind: String
+}
+
+input CustomerReportRequest {
+  customerId: String!
+  type: ReportType!
+  comment: String!
+  meta: Map!
+  customerPtp: CustomerPTPRequest
+}
+
+input CustomerReportsSearchRequest {
+  agentId: String
+  customerId: String
+  partnerId: String
+  type: String
+  metaFilter: String
+  date: DateBetween
+}
+
+type CustomerReportsSearchResult {
+  items: [CustomerReport]
+  pageInfo: PageInfo!
+}
+
+input CustomerReportUpdateRequest {
+  type: ReportType!
+  comment: String!
+  meta: Map!
+  customerPtp: CustomerPTPRequest
+}
+
+input CustomerSearchRequest {
+  partnerId: String
+  agentId: String
+  userId: String
+  loanId: String
+  systemId: String
+  name: String
+  email: String
+  accountNumber: String
+  telephone: String
+  bvnNumber: String
+  lga: String
+  city: String
+  state: String
+  completed: Boolean
+}
+
+type CustomerSearchResult {
+  items: [Customer]
+  pageInfo: PageInfo!
+}
+
+input CustomerUpdateRequest {
+  name: String
+  address: String
+  state: String
+  lga: String
+  city: String
+  bvnNumber: String
+  guarantorName: String
+  guarantorAddress: String
+  guarantorTelephone: String
+  guarantorRelationship: String
+  gender: Gender
+  email: String
+  notifyByEmail: Boolean
+  dob: String
+  alternateNumber: String
+  maritalStatus: MaritalStatus
+  stateOfOrigin: String
+  lgaOfOrigin: String
+  nextOfKinName: String
+  nextOfKinTelephone: String
+  nextOfKinAddress: String
+  employmentStatus: EmploymentStatus
+  businessName: String
+  businessAddress: String
+  monthlyNetIncome: Float
+  annualNetIncome: Float
+  customerBankName: String
+  customerAccountName: String
+  customerAccountNumber: String
+  meansOfIdentification: UploadCustomerFile
+  utilityBill: UploadCustomerFile
+}
+
+input DateBetween {
+  from: String
+  to: String
+}
+
+enum downloadType {
+  reports
+  portfolios
+}
+
+enum EmploymentStatus {
+  employed
+  unemployed
+  selfemployed
+}
+
+enum FrequencyType {
+  daily
+  weekly
+  bi_weekly
+  monthly
+  yearly
+}
+
+enum Gender {
+  male
+  female
+}
+
+type GeneralSetting {
+  id: String
+  settingsType: String!
+  description: String!
+  settings: Map!
+  createdAt: String
+  updatedAt: String
+}
+
+input GeneralSettingRequest {
+  settingsType: String
+  description: String
+  settings: Map
+}
+
+input GeneralSettingUpdateRequest {
+  description: String
+  settings: Map
+}
+
+scalar Map
+
+enum MaritalStatus {
+  single
+  married
+  divorced
+}
+
+type MessageCampaign {
+  id: String
+  mode: String
+  timeOfDay: String
+  dateFrom: String
+  dateTo: String
+  message: String
+  partners: [String]
+  processed: Boolean
+  dispatchAt: String
+  eligibleCustomers: Int
+  emailTemplateID: String
+  createdAt: String
+  updatedAt: String
+}
+
+input MessageCampaignRequest {
+  mode: Int!
+  timeOfDay: Int!
+  dateFrom: String!
+  dateTo: String!
+  message: String!
+  partners: [String]!
+  dispatchAt: String!
+  emailTemplateID: String
+}
+
+type MessageCampaignSearchResult {
+  items: [MessageCampaign]
+  pageInfo: PageInfo!
+}
+
+type MessageTemplate {
+  id: String
+  message: String
+  active: Boolean
+  channels: [String]
+  createdAt: String
+  updatedAt: String
+}
+
+input MessageTemplateRequest {
+  message: String!
+  channels: [String]!
+}
+
+type Mutation {
+  createUser(input: UserRequest!): User
+  updateUser(id: String!, input: UpdateUserRequest!): User
+  toggleActivateUser(id: String!): Boolean
+  updateUserEmailPassword(
+    id: String!
+    input: UpdateUserEmailPasswordRequest!
+  ): User
+  selfUpdatePassword(oldpassword: String!, newpassword: String!): User
+  createPartner(input: PartnerRequest!): Partner
+  updatePartner(id: String!, input: UpdatePartnerRequest!): Partner
+  toggleActivatePartner(id: String!): Boolean
+  uploadCustomer(input: UploadCustomerRequest!): Boolean!
+  uploadPortfolioReconciliation(
+    input: UploadPortfolioReconciliationRequest!
+  ): Boolean!
+  uploadUpdateCustomerInformation(
+    input: UploadUpdateCustomerInformationRequest!
+  ): Boolean!
+  uploadCustomerWithCampaign(input: UploadCustomerRequest!): Boolean!
+  uploadCustomerCollectionReport(
+    input: UploadCustomerCollectionRequest!
+  ): Boolean!
+  submitCustomerReport(input: CustomerReportRequest!): CustomerReport
+  updateCustomerReport(
+    id: String!
+    input: CustomerReportUpdateRequest!
+  ): CustomerReport
+  updateCustomerPTPByID(
+    id: String!
+    input: CustomerPTPUpdateRequest!
+  ): CustomerPtp
+  deactivateCustomerPTPByID(id: String!): Boolean!
+  submitCustomerCollection(input: CustomerNewCollectionRequest!): Boolean!
+  reAssignAgentToCustomer(customerId: String!, agentId: String!): Boolean!
+  reAssignPortfolioToAgents(
+    sourceAgentId: String!
+    agentIds: [String!]
+  ): Boolean!
+  toggleCustomerDND(customerId: String!): Boolean!
+  selfUpdateCustomer(id: String!, input: CustomerUpdateRequest): Customer!
+  setCustomerPinAndEmail(input: PinAndEmailRequest!): Boolean!
+  resetCustomerPin(
+    customerId: String!
+    oldPin: String!
+    newPin: String!
+  ): Boolean!
+  uploadAgent(input: UploadAgentRequest!): Boolean!
+  settleAgent(input: SettleAgentRequest!): Boolean!
+  createNotification(input: NotificationRequest!): Notification
+  updateNotification(
+    id: String!
+    input: UpdateNotificationRequest!
+  ): Notification
+  toggleActivateNotification(id: String!): Boolean
+  createMessageTemplate(input: MessageTemplateRequest!): MessageTemplate
+  updateMessageTemplate(
+    id: String!
+    input: UpdateMessageTemplateRequest!
+  ): MessageTemplate
+  toggleActivateTemplate(id: String!): Boolean
+  createMessageCampaign(input: MessageCampaignRequest!): MessageCampaign
+  updateMessageCampaign(
+    id: String!
+    input: UpdateMessageCampaignRequest!
+  ): MessageCampaign
+  createCustomerPlan(input: CustomerPlanRequest!): CustomerPlan
+  updateCustomerPlan(id: String!, input: CustomerPlanRequest!): CustomerPlan
+  deactivateCustomerPlan(id: String!): Boolean!
+  generatePartnerAPICredential(partnerId: String!): APICredential
+  destroyPartnerAPICredentials(partnerId: String!): Boolean!
+  toggleApiCredentialActiveState(id: String!): APICredential
+  destroyAPICredential(id: String!): Boolean!
+  startMaintenance(note: String!): Boolean!
+  endMaintenance: Boolean!
+  addGeneralSetting(input: GeneralSettingRequest!): GeneralSetting
+  updateSettingByID(
+    id: String!
+    input: GeneralSettingUpdateRequest!
+  ): GeneralSetting
+  deleteGeneralSettingsByID(id: String!): Boolean!
+}
+
+type Notification {
+  id: String
+  alias: String
+  description: String
+  channels: [String]
+  mode: String
+  emailTemplateID: String
+  modeOperator: String
+  modeNumber: Int
+  modeValue: String
+  timeOfDay: String
+  dispatchAt: String
+  message: String
+  active: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
+input NotificationRequest {
+  alias: String!
+  description: String!
+  channels: [String]!
+  mode: Int!
+  modeOperator: String
+  emailTemplateID: String
+  modeNumber: Int
+  modeValue: String
+  timeOfDay: Int!
+  dispatchAt: String
+  message: String!
+}
+
+type NotificationSearchResult {
+  items: [Notification]
+  pageInfo: PageInfo!
+}
+
+input Page {
+  number: Int!
+  size: Int!
+  sortBy: String
+  sortDirectionDesc: Boolean
+}
+
+type PageInfo {
+  page: Int!
+  size: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  totalCount: Int!
+}
+
+type Partner {
+  id: String
+  userId: String
+  name: String
+  description: String
+  website: String
+  logoUrl: String
+  accountNumber: String
+  accountName: String
+  bankName: String
+  active: Boolean
+  settings: Map
+  createdAt: String
+  updatedAt: String
+}
+
+input PartnerRequest {
+  userId: String
+  name: String!
+  description: String
+  website: String
+  logoUrl: String
+  accountNumber: String
+  accountName: String
+  bankName: String
+  settings: Map
+}
+
+type PartnerSearchResult {
+  items: [Partner]
+  pageInfo: PageInfo!
+}
+
+enum PaymentStatusType {
+  no_payment
+  part_payment
+  full_payment
+}
+
+input PinAndEmailRequest {
+  customerId: String!
+  pin: String!
+  email: String
+  notifyByEmail: Boolean
+}
+
+input portfoliosAndReportSearchRequest {
+  partnerId: String!
+  agentId: String
+  date: DateBetween
+  allData: Boolean!
+  onlyPtpData: Boolean
+  searchParam: String
+  ptpCondition: Map
+  downloadType: downloadType!
+  uploadDate: String
+}
+
+type Query {
+  authenticate(email: String!, password: String!): AuthResponse
+  refreshToken(token: String!): AuthResponse
+  findOneUser(id: String!): User
+  searchUser(page: Page!, kind: Int!, keyword: String): UserSearchResult!
+  findOnePartner(id: String!): Partner
+  searchPartner(
+    page: Page!
+    keyword: String!
+    active: Boolean
+  ): PartnerSearchResult!
+  searchCustomer(
+    page: Page!
+    q: CustomerSearchRequest
+    strictlyHasInstalment: Boolean!
+    reached: Boolean
+  ): CustomerSearchResult!
+  findOneCustomer(id: String!): Customer
+  searchCustomerCollection(
+    page: Page!
+    q: CustomerCollectionSearchRequest!
+  ): CustomerCollectionSearchResult!
+  searchCustomerReports(
+    page: Page!
+    q: CustomerReportsSearchRequest!
+  ): CustomerReportsSearchResult!
+  countCustomerByPtpDate(day: String!): Int!
+  searchCustomerByPtpDate(page: Page!, day: String!): CustomerSearchResult!
+  findOneCustomerByLoanID(loanID: String!, partnerId: String!): Customer
+  findOneCustomerByPhoneNumber(number: String!): Customer
+  findCustomersByLoanID(loanID: String!, partnerId: String): [Customer]
+  findCustomersByPhoneNumber(number: String!): [Customer]
+  findCustomersByTag(page: Page!, tag: String!): CustomerSearchResult!
+  fetchPortfoliosAndReportData(q: portfoliosAndReportSearchRequest!): String!
+  findCustomerPtps(customerID: String!): [CustomerPtp]
+  checkCustomerAuthStatus(phoneNumber: String!): CustomerAuthStatus!
+  authenticateCustomer(id: String!, pin: String!): CustomerAuthResponse!
+  refreshCustomerToken(token: String!): CustomerAuthResponse!
+  sendOTP(customerId: String!, phoneNumber: String!): SendOTPResponse!
+  resendOTP(customerId: String!, pinId: String!): Boolean!
+  verifyOTP(customerId: String!, otp: String!): Boolean!
+  getAgentEarnings: CustomerCollectionSearchResult!
+  getSMSCountForCurrentMonth(agentId: String!): Int!
+  searchNotification(page: Page!, keyword: String): NotificationSearchResult!
+  countEligibleCustomersForToday(notification: NotificationRequest): Int!
+  searchMessageTemplate(page: Page!, active: Boolean): TemplateSearchResult!
+  searchMessageCampaign(
+    page: Page!
+    processed: Boolean
+  ): MessageCampaignSearchResult!
+  countEligibleCustomers(campaign: MessageCampaignRequest): Int!
+  findOneCustomerPlan(id: String!): CustomerPlan
+  fetchPartnerAPICredentials(partnerId: String!): [APICredential]
+  fetchAPICredential(id: String!): APICredential
+  getSettingByID(id: String!): GeneralSetting
+  getAllGeneralSettings: [GeneralSetting]
+}
+
+enum ReportType {
+  call
+  visit
+  call_bot
+  chat_bot
+  selfservice
+  collection
+}
+
+type SendOTPResponse {
+  otpSent: Boolean!
+  pinId: String
+}
+
+input SettleAgentRequest {
+  agentId: String!
+  reference: String!
+  note: String!
+}
+
+type TemplateSearchResult {
+  items: [MessageTemplate]
+  pageInfo: PageInfo!
+}
+
+input UpdateMessageCampaignRequest {
+  mode: Int
+  timeOfDay: Int
+  dateFrom: String
+  dateTo: String
+  message: String
+  partners: [String]
+  dispatchAt: String
+  emailTemplateID: String
+}
+
+input UpdateMessageTemplateRequest {
+  message: String
+  channels: [String]
+}
+
+input UpdateNotificationRequest {
+  alias: String
+  description: String
+  channels: [String]
+  mode: Int
+  emailTemplateID: String
+  modeOperator: String
+  modeNumber: Int
+  modeValue: String
+  timeOfDay: Int
+  message: String
+}
+
+input UpdatePartnerRequest {
+  name: String
+  description: String
+  website: String
+  logoUrl: String
+  accountNumber: String
+  accountName: String
+  bankName: String
+  settings: Map
+}
+
+input UpdateUserEmailPasswordRequest {
+  email: String!
+  password: String!
+}
+
+input UpdateUserRequest {
+  name: String
+  email: String
+  address: String
+  telephone: String
+  state: String
+  lga: String
+  region: String
+  agent: AgentRequest
+  admin: AdminRequest
+}
+
+scalar Upload
+
+input UploadAgentRequest {
+  file: Upload!
+  sheetNumber: Int!
+  agentKind: Int!
+  partnerId: String!
+}
+
+input UploadCustomerCollectionRequest {
+  partnerId: String!
+  file: Upload!
+  sheetNumber: Int!
+}
+
+input UploadCustomerFile {
+  type: String!
+  file: Upload!
+  name: String!
+}
+
+input UploadCustomerRequest {
+  partnerId: String!
+  file: Upload!
+  sheetNumber: Int!
+  staffIDs: [String]
+  campaignName: String
+}
+
+input UploadPortfolioReconciliationRequest {
+  partnerId: String!
+  file: Upload!
+  sheetNumber: Int!
+}
+
+input UploadUpdateCustomerInformationRequest {
+  partnerId: String!
+  file: Upload!
+  sheetNumber: Int!
+}
+
+type User {
+  id: String
+  name: String
+  email: String
+  telephone: String
+  address: String
+  state: String
+  lga: String
+  region: String
+  kind: String
+  createdAt: String
+  updatedAt: String
+  agent: Agent
+  admin: Admin
+}
+
+input UserRequest {
+  name: String!
+  email: String!
+  password: String!
+  address: String
+  telephone: String!
+  kind: Int!
+  state: String
+  lga: String
+  region: String
+  agent: AgentRequest
+  admin: AdminRequest
+}
+
+type UserSearchResult {
+  items: [User]
+  pageInfo: PageInfo!
+}
+
